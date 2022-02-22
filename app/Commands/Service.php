@@ -54,7 +54,11 @@ class Service extends Command
             foreach($config['components'] as $component){
                 $arguments = [];
                 foreach($component as $property => $value)
-                    $arguments[] = "--$property=$value";
+                    if(!is_array($value))
+                        $arguments[] = "--$property=$value";
+                    else
+                        foreach($value as $subValue)
+                            $arguments[] = "--$property=$subValue";
                 $arguments = implode(' ', $arguments);
                 `./monitor process $arguments > $logsDirectory/{$component['id']}.log &`;
                 $this->info("Started monitoring component #{$component['id']}.");
