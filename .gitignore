@@ -1,0 +1,8 @@
+/vendor
+/.idea
+/.vscode
+/.vagrant
+.phpunit.result.cache
+/cachet-data
+config.json
+composer.lock
