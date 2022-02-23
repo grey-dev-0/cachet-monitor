@@ -40,6 +40,10 @@ abstract class Monitor{
      */
     abstract public function monitor();
 
+    public function __construct(){
+        $this->cachet = app('cachet');
+    }
+
     /**
      * Gets the currently cached cachet's component status.
      *

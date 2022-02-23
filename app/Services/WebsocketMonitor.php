@@ -9,6 +9,7 @@ class WebsocketMonitor extends Monitor{
      * @param string $url The URL to be connected to for availability.
      */
     public function __construct($componentId, $url){
+        parent::__construct();
         $this->componentId = $componentId;
         $this->url = $url;
         $this->statusCacheFile = getcwd().'/cachet-data/status/'.$this->componentId;
@@ -19,6 +20,7 @@ class WebsocketMonitor extends Monitor{
      * @inheritDoc
      */
     public function monitor(){
+        monitor_start:
         $loop = Loop::get();
         $connector = new \React\Socket\Connector($loop);
         $connector = new Connector($loop, $connector);
@@ -44,6 +46,6 @@ class WebsocketMonitor extends Monitor{
         // Retry monitoring this websocket instance if the connection is lost.
         $this->report(self::COMPONENT_MAJOR_OUTAGE);
         sleep(3);
-        $this->monitor();
+        goto monitor_start;
     }
 }

@@ -32,6 +32,7 @@ class HttpMonitor extends Monitor{
      * @param ?int[] $acceptedCodes HTTP status codes that are considered successful for the pinged URL.
      */
     public function __construct($componentId, $url, $interval = null, $acceptedCodes = null, $timeout = null, $slowTimeout = null){
+        parent::__construct();
         $this->componentId = $componentId;
         $this->url = $url;
         $this->interval = $interval?? $this->interval;
