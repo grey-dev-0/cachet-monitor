@@ -50,9 +50,14 @@ abstract class Monitor{
     protected function report($status){
         if($status == $this->getCachedStatus())
             return;
-        $component = $this->cachet->getComponentById($this->component->id);
-        $component->status = $status;
-        $component->save();
+
+        // Notifying Catchet only if this is the highest - worst - status of a component among all of its monitors.
+        if(DB::table('components')->where('id', $this->component->id)->where('monitor_id', '!=', $this->id)
+                ->where('status', '>', $status)->count() == 0){
+            $component = $this->cachet->getComponentById($this->component->id);
+            $component->status = $status;
+            $component->save();
+        }
 
         // Caching new status.
         if(is_null($cachedStatus = DB::table('components')->where('monitor_id', $this->id)->first()))
