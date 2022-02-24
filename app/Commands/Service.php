@@ -27,6 +27,11 @@ class Service extends Command
     private $fork;
 
     /**
+     * @var string $baseDir Base working directory of the service.
+     */
+    private $baseDir;
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -35,18 +40,22 @@ class Service extends Command
     {
         set_time_limit(0);
         $this->fork = getmypid();
-        $this->task('Creating required directories if do not exist..', function(){
-            $basedir = getcwd();
-            $statusCache = "$basedir/cachet-data/status";
-            $logs = "$basedir/cachet-data/logs";
-            foreach([$statusCache, $logs] as $directory)
-                if(!is_dir($directory))
-                    mkdir($directory, 0777, true);
+        $this->baseDir = getcwd();
+        $this->task('Creating required directories if do not exist', function(){
+            $directory = "{$this->baseDir}/cachet-data/logs";
+            if(!is_dir($directory))
+                mkdir($directory, 0777, true);
             return true;
+        });
+        $this->task('(Re)initializing service database', function(){
+            if(is_file($databaseFile = "{$this->baseDir}/cachet-data/database.sqlite"))
+                unlink($databaseFile);
+            touch($databaseFile);
+            `./monitor migrate`;
         });
         $config = [];
         $this->task('Parsing configuration file..', function() use(&$config){
-            $configFile = getcwd().'/config.json';
+            $configFile = "{$this->baseDir}/config.json";
             if(!is_file($configFile))
                 return false;
             if(empty($config = json_decode(File::get($configFile), true)))
@@ -55,9 +64,9 @@ class Service extends Command
         });
         if(empty($config))
             return 1;
-        $this->info('Starting components monitoring processes..');
+        $this->info('Starting components monitoring processes');
         $this->warn("This is the master process of monitoring {$config['cachet_url']}.\nPlease don't kill this process to keep the monitoring services running..");
-        $logsDirectory = getcwd().'/cachet-data/logs';
+        $logsDirectory = $this->baseDir.'/cachet-data/logs';
         foreach($config['components'] as $component){
             $arguments = [];
             foreach($component as $property => $value)

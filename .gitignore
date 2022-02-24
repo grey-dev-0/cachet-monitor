@@ -4,5 +4,7 @@
 /.vagrant
 .phpunit.result.cache
 /cachet-data
+/builds
 config.json
 composer.lock
+/database/database.sqlite

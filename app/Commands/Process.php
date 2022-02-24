@@ -32,11 +32,26 @@ class Process extends Command
     public function handle()
     {
         $monitor = $this->getMonitorClass();
-        $monitor = new $monitor(...$this->getMonitorArguments());
+        $component = $this->getComponentClass();
+        $monitor = new $monitor(new $component($this->options()));
         $this->info(date('[d/m/Y h:i:s A]').' Started component #'.$this->option('id').' monitoring process.');
         $monitor->monitor();
         $this->info(date('[d/m/Y h:i:s A]').' Component #'.$this->option('id').' monitoring process has crashed!');
         return 0;
+    }
+
+    /**
+     * Get the component class that corresponds to its submitted type.
+     *
+     * @return ?string
+     */
+    private function getComponentClass(){
+        switch($this->option('type')){
+            case 'http': return \App\Components\HttpComponent::class;
+            case 'ws': return \App\Components\WebsocketComponent::class;
+            // TODO: case 'shell': return \App\Components\ShellComponent::class;
+        }
+        return null;
     }
 
     /**
@@ -46,33 +61,10 @@ class Process extends Command
      */
     private function getMonitorClass(){
         switch($this->option('type')){
-            case 'http': return \App\Services\HttpMonitor::class;
-            case 'ws': return \App\Services\WebsocketMonitor::class;
-            // TODO: case 'shell': return \App\Services\ShellMonitor::class;
+            case 'http': return \App\Monitors\HttpMonitor::class;
+            case 'ws': return \App\Monitors\WebsocketMonitor::class;
+            // TODO: case 'shell': return \App\Monitors\ShellMonitor::class;
         }
         return null;
-    }
-
-    /**
-     * Get the corresponding monitoring class arguments according to the submitted cachet component type.
-     *
-     * @return array
-     */
-    private function getMonitorArguments(){
-        $arguments = [$this->option('id')];
-        switch($this->option('type')){
-            case 'http':
-                $arguments[] = $this->option('url');
-                $arguments[] = (!empty($interval = $this->option('interval')))? $interval : null;
-                $arguments[] = (!empty($acceptedCodes = $this->option('accepted_codes')))? $acceptedCodes : null;
-                $arguments[] = (!empty($timeout = $this->option('timeout')))? $timeout : null;
-                $arguments[] = (!empty($slowTimeout = $this->option('slow_timeout')))? $slowTimeout : null;
-                break;
-            case 'ws':
-                $arguments[] = $this->option('url');
-                break;
-            // case 'shell': // TODO: Handling shell monitor.
-        }
-        return $arguments;
     }
 }
