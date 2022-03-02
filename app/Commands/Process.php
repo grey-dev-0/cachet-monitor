@@ -49,7 +49,7 @@ class Process extends Command
         switch($this->option('type')){
             case 'http': return \App\Components\HttpComponent::class;
             case 'ws': return \App\Components\WebsocketComponent::class;
-            // TODO: case 'shell': return \App\Components\ShellComponent::class;
+            case 'shell': return \App\Components\ShellComponent::class;
         }
         return null;
     }
@@ -63,7 +63,7 @@ class Process extends Command
         switch($this->option('type')){
             case 'http': return \App\Monitors\HttpMonitor::class;
             case 'ws': return \App\Monitors\WebsocketMonitor::class;
-            // TODO: case 'shell': return \App\Monitors\ShellMonitor::class;
+            case 'shell': return \App\Monitors\ShellMonitor::class;
         }
         return null;
     }
