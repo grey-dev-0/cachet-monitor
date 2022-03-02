@@ -14,4 +14,9 @@ All the checks listed above can only be mapped to Cachet's standard components b
 
 ## Attribution
 
-The real credit goes for the maintainers and contributors of Laravel, Laravel Zero and, CachetHQ. 
+The real credit goes for the maintainers and contributors of:
+
+- [Laravel](https://github.com/laravel/laravel)
+- [Laravel Zero](https://github.com/laravel-zero/laravel-zero)
+- [Cachet](https://github.com/cachetHQ/Cachet)
+- [Cachet php Client](https://github.com/DivineOmega/cachet.php)
