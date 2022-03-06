@@ -51,7 +51,7 @@ class Service extends Command
             if(is_file($databaseFile = "{$this->baseDir}/cachet-data/database.sqlite"))
                 unlink($databaseFile);
             touch($databaseFile);
-            `./monitor migrate`;
+            `./monitor migrate --force`;
         });
         $config = [];
         $this->task('Parsing configuration file..', function() use(&$config){
