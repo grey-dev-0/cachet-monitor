@@ -15,7 +15,8 @@ class Process extends Command
     protected $signature = 'process {--id= : The ID of the component} {--type= : The type of monitored component "http", "ws" or, "shell"}
                                     {--interval= : Between HTTP pings or shell checks sleep interval} {--timeout= : HTTP ping timeout limit}
                                     {--slow_timeout= : HTTP ping slow request time limit} {--accepted_codes=* : Success HTTP ping status codes}
-                                    {--url= : The URL of the required HTTP or WS ping / test.}';
+                                    {--url= : The URL of the required HTTP or WS ping / test.} {--command= : The shell command to test}
+                                    {--substring= : The substring to match with shell command output}';
 
     /**
      * The description of the command.

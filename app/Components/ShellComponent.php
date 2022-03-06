@@ -4,7 +4,7 @@ namespace App\Components;
 
 class ShellComponent extends Component{
     /**
-     * @var string $command The shell command to execute.
+     * @var string $command The shell command to execute in base64 encoded format, will be base64 decoded on construction.
      */
     public $command;
 
@@ -22,4 +22,12 @@ class ShellComponent extends Component{
      * @var int $slowTimeout The timeout that considers the shell command performing slowly.
      */
     public $slowTimeout = 1000;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct($properties){
+        parent::__construct($properties);
+        $this->command = base64_decode($this->command);
+    }
 }

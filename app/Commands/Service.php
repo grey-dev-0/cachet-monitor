@@ -70,9 +70,11 @@ class Service extends Command
         foreach($config['components'] as $component){
             $arguments = [];
             foreach($component as $property => $value)
-                if(!is_array($value))
+                if(!is_array($value)){
+                    if($property == 'command')
+                        $value = '\''.base64_encode($value).'\'';
                     $arguments[] = "--$property=$value";
-                else
+                } else
                     foreach($value as $subValue)
                         $arguments[] = "--$property=$subValue";
             $arguments = implode(' ', $arguments);
